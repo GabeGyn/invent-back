@@ -2,8 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Invent.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-var  MyCorsPolicy = "_MyCorsPolicy";
 
+var  MyCorsPolicy = "_MyCorsPolicy";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyCorsPolicy, policy  =>
@@ -13,6 +13,7 @@ builder.Services.AddCors(options =>
         .AllowAnyMethod();
     });
 });
+
 // Add services to the container.
 builder.Services.AddControllers();
 
