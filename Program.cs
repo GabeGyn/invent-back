@@ -1,11 +1,17 @@
+using Microsoft.EntityFrameworkCore;
+using Invent.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<EquipamentoEletronicoContext>(opt =>
+    opt.UseInMemoryDatabase("EquipamentoEletronico")
+);
 
 var app = builder.Build();
 

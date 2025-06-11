@@ -1,7 +1,6 @@
-using System;
-using Microsoft.AspNetCore.Mvc;
-using Invent.Services;
 using Invent.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Invent.Controllers;
 
@@ -9,35 +8,70 @@ namespace Invent.Controllers;
 [Route("api/[controller]")]
 public class EquipamentoEletronicoController: Controller {
     
-    private readonly EquipamentoEletronicoService _equipamentoEletronicoService;
-    public EquipamentoEletronicoController(EquipamentoEletronicoService equipamentoEletronicoService) {
-        _equipamentoEletronicoService = equipamentoEletronicoService;
+    private readonly EquipamentoEletronicoContext _context;
+    public EquipamentoEletronicoController(EquipamentoEletronicoContext context)
+    {
+        _context = context;
     }
+
 
     [HttpGet]
     public async Task<List<EquipamentoEletronico>> Get()
     {
-        return await _equipamentoEletronicoService.GetAsync();
+        var data = await _context.equipamentoEletronico.ToListAsync();
+        return data;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post([FromBody] EquipamentoEletronico equipamentoEletronico)
+    public async Task<IActionResult> Post([FromBody] EquipamentoEletronico data)
     {
-        await _equipamentoEletronicoService.CreateAsync(equipamentoEletronico);
-        return CreatedAtAction(nameof(Get), new { id = equipamentoEletronico.Id }, equipamentoEletronico);
+        _context.equipamentoEletronico.Add(data);
+        await _context.SaveChangesAsync();
+        return CreatedAtAction(nameof(Get), new { id = data.Id }, data);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Put(string id, [FromBody] string movieId)
+    public async Task<IActionResult> Put(string id, [FromBody] EquipamentoEletronico data)
     {
-        await _equipamentoEletronicoService.UpdateAsync(id, movieId);
+        if (id != data.Id)
+        {
+            return BadRequest();
+        }
+
+        var item = await _context.equipamentoEletronico.FindAsync(id);
+        if (item == null)
+        {
+            return NotFound();
+        }
+
+        item.nome = data.nome;
+        item.tipo = data.tipo;
+        item.qtdeEstoque = data.qtdeEstoque;
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return NotFound();
+        }
+
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)
     {
-        await _equipamentoEletronicoService.DeleteAsync(id);
+       var data = await _context.equipamentoEletronico.FindAsync(id);
+        if (data == null)
+        {
+            return NotFound();
+        }
+
+        _context.equipamentoEletronico.Remove(data);
+        await _context.SaveChangesAsync();
+
         return NoContent();
     }
 }
