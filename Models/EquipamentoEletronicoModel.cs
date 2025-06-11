@@ -1,3 +1,5 @@
+using Microsoft.Extensions.WebEncoders.Testing;
+
 namespace Invent.Models;
 
 public class EquipamentoEletronico
@@ -6,5 +8,7 @@ public class EquipamentoEletronico
     public string nome { get; set; } = null!;
     public string tipo { get; set; } = null!;
     public int qtdeEstoque { get; set; }
-    public DateTime dataInclusao { get; set; } = DateTime.Now; 
+    public DateTime dataInclusao { get; set; } = DateTime.Now;
+    public bool temEstoque { get => qtdeEstoque>0?true:false; }
+
 }

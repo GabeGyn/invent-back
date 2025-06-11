@@ -2,11 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using Invent.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-var  CorsPolicy = "_CorsPolicy";
+var  MyCorsPolicy = "_MyCorsPolicy";
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: CorsPolicy, policy  =>
+    options.AddPolicy(name: MyCorsPolicy, policy  =>
     {
         policy.WithOrigins("http://localhost:4200")
         .AllowAnyHeader()
@@ -31,7 +31,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors(CorsPolicy);
+
+app.UseCors(MyCorsPolicy);
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
